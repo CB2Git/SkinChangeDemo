@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="theme_main_color" format="color|reference" />
+    <attr name="theme_sub_color" format="color|reference" />
+    <attr name="theme_main_bg" format="reference" />
+
+    <attr name="module_color" format="color|reference" />
+</resources>

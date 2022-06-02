@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SkinChangeDemo</string>
+    <string name="test_string">主工程的文本</string>
+</resources>
