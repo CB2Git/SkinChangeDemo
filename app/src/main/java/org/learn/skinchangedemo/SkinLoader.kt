@@ -24,6 +24,30 @@ class SkinLoader {
         skinPkgName = null
     }
 
+    fun loadResourceWithNoReflection(context: Context, skinPath: String) {
+        try {
+            val packageArchiveInfo = context.packageManager.getPackageArchiveInfo(
+                skinPath,
+                PackageManager.GET_ACTIVITIES
+                        or PackageManager.GET_META_DATA
+                        or PackageManager.GET_SERVICES
+                        or PackageManager.GET_PROVIDERS
+            )
+            if (packageArchiveInfo == null) {
+                Log.w(TAG, "loadResource: app load fail")
+                return
+            }
+            skinPkgName = packageArchiveInfo.packageName
+            packageArchiveInfo.applicationInfo.publicSourceDir = skinPath
+            packageArchiveInfo.applicationInfo.sourceDir = skinPath
+            resource =
+                context.packageManager.getResourcesForApplication(packageArchiveInfo.applicationInfo)
+        } catch (e: Exception) {
+
+        }
+    }
+
+    @Deprecated("使用到了反射，不推荐")
     fun loadResource(context: Context, skinPath: String) {
         try {
             val packageArchiveInfo = context.packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES)

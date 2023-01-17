@@ -296,25 +296,30 @@ private class AttrView(val view: View, val attrs: MutableList<AttrItem> = mutabl
 
 ## 读取皮肤包
 
-读取外部apk资源网上代码已经非常多了，就不在多说了，主要是将外部的apk的路径添加到AssetManager，然后创建Resources对象，当我们换肤的时候，就是在这个Resources对象中寻找资源文件并替换
+这里使用的不是传统的反射，可以get一下
 
 ```kotlin
-fun loadResource(context: Context, skinPath: String) {
-    try {
-        val packageArchiveInfo = context.packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES)
-        if (packageArchiveInfo == null) {
-            Log.w(TAG, "loadResource: app load fail")
-            return
-        }
-        skinPkgName = packageArchiveInfo.packageName
-        val assetManager = AssetManager::class.java.newInstance()
-        val method = AssetManager::class.java.getMethod("addAssetPath", String::class.java)
-        method.invoke(assetManager, skinPath)
-
-        resource = Resources(assetManager, context.resources.displayMetrics, context.resources.configuration)
-    } catch (e: Exception) {
-        Log.e(TAG, "loadResource: ", e)
+fun loadResourceWithNoReflection(context: Context, skinPath: String) {
+  try {
+    val packageArchiveInfo = context.packageManager.getPackageArchiveInfo(
+      skinPath,
+      PackageManager.GET_ACTIVITIES
+              or PackageManager.GET_META_DATA
+              or PackageManager.GET_SERVICES
+              or PackageManager.GET_PROVIDERS
+    )
+    if (packageArchiveInfo == null) {
+      Log.w(TAG, "loadResource: app load fail")
+      return
     }
+    skinPkgName = packageArchiveInfo.packageName
+    packageArchiveInfo.applicationInfo.publicSourceDir = skinPath
+    packageArchiveInfo.applicationInfo.sourceDir = skinPath
+    resource =
+      context.packageManager.getResourcesForApplication(packageArchiveInfo.applicationInfo)
+  } catch (e: Exception) {
+
+  }
 }
 ```
 

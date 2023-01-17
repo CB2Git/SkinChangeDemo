@@ -29,7 +29,7 @@ class Demo3ThemeActivity : AppCompatActivity() {
     fun onChangeSkin(view: View) {
         //io操作，需要异步，这里省略了
         val file = File(getExternalFilesDir(null), "skin.apk")
-        SkinLoader.instance.loadResource(this, file.absolutePath)
+        SkinLoader.instance.loadResourceWithNoReflection(this, file.absolutePath)
         refreshUI()
     }
 
